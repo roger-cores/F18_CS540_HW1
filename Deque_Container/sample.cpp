@@ -27,6 +27,8 @@ Deque_DEFINE(MyClass)
 int main() {
 	Deque_MyClass deq;
   Deque_MyClass_ctor(&deq, MyClass_less_by_id);
-  printf("outside %d", deq.size(&deq));
+  deq.push_back(&deq, MyClass{1, "Joe"});
+  deq.push_back(&deq, MyClass{2, "Mary"});
+  printf("%d", deq.size(&deq));
 	return 0;
 }
