@@ -28,6 +28,7 @@ typedef struct Deque_##type {                                                   
  size_t (*size)(Deque_##type *deq);                                             \
  bool (*empty)(Deque_##type *deq);                                              \
  void (*push_back)(Deque_##type *deq, type t);                                  \
+ void (*push_front)(Deque_##type *deq, type t);                                 \
  void (*pop_front)(Deque_##type *deq);                                          \
  void (*pop_back)(Deque_##type *deq);                                           \
  type (*at)(Deque_##type *deq, int index);                                      \
@@ -35,7 +36,7 @@ typedef struct Deque_##type {                                                   
  Deque_##type##_Iterator (*end)(Deque_##type *deq);                             \
  size_t data_size = 0;                                                          \
  size_t capacity = 17;                                                          \
- type data[17];                                                                 \
+ type *data;                                                                    \
  int front_ptr = 0;                                                             \
  int rear_ptr = 0;                                                              \
 } Deque_##type;                                                                 \
@@ -110,6 +111,7 @@ Deque_##type##_Iterator beginOf_##type(Deque_##type *deq) {                     
                                                                                 \
 void Deque_##type##_ctor(struct Deque_##type *deq,                              \
                         bool (*comparator)(const type &one, const type &two)) { \
+  deq->data = (type*) calloc(deq->capacity, sizeof(type));                      \
   deq->comparator = comparator;                                                 \
   deq->size = &sizeOfDeque_##type;                                              \
   deq->empty = &emptyOfDeque_##type;                                            \
@@ -124,4 +126,20 @@ void Deque_##type##_ctor(struct Deque_##type *deq,                              
 bool Deque_##type##_Iterator_equal(Deque_##type##_Iterator it_current,          \
                                    Deque_##type##_Iterator it_end) {            \
   return &it_current.deref(&it_current) == &it_end.deref(&it_end);              \
+}                                                                               \
+                                                                                \
+void Deque_##type##_reallocate(Deque_##type *deq) {                             \
+  deq->capacity = ((deq->capacity-1) * 2) + 1;                                  \
+  type *data = (type*) calloc(deq->capacity, sizeof(type));                     \
+  int i = 0;                                                                    \
+  for (Deque_##type##_Iterator it = deq->begin(deq);                            \
+       !Deque_##type##_Iterator_equal(it, deq->end(deq)); it.inc(&it)) {        \
+      data[i] = it.deref(&it);                                                  \
+      i++;                                                                      \
+  }                                                                             \
+  deq->front_ptr = 0;                                                           \
+  deq->rear_ptr = i;                                                            \
+                                                                                \
+  free(deq->data);                                                              \
+  deq->data = data;                                                             \
 }
