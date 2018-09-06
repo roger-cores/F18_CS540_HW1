@@ -28,6 +28,8 @@ typedef struct Deque_##type {                                                   
  size_t (*size)(Deque_##type *deq);                                             \
  bool (*empty)(Deque_##type *deq);                                              \
  void (*push_back)(Deque_##type *deq, type t);                                  \
+ void (*pop_front)(Deque_##type *deq);                                          \
+ void (*pop_back)(Deque_##type *deq);                                           \
  type (*at)(Deque_##type *deq, int index);                                      \
  Deque_##type##_Iterator (*begin)(Deque_##type *deq);                           \
  Deque_##type##_Iterator (*end)(Deque_##type *deq);                             \
@@ -50,6 +52,24 @@ void pushBackOfDeque_##type(Deque_##type *deq, type t) {                        
   deq->data[deq->rear_ptr] = t;                                                 \
   deq->rear_ptr++;                                                              \
   deq->data_size++;                                                             \
+}                                                                               \
+                                                                                \
+void popBackOfDeque_##type(Deque_##type *deq) {                                 \
+  if(deq->empty(deq) == 1) {                                                    \
+    return;                                                                     \
+  } else {                                                                      \
+    deq->rear_ptr = mask(deq->rear_ptr, deq->capacity, 0);                      \
+    deq->data_size--;                                                           \
+  }                                                                             \
+}                                                                               \
+                                                                                \
+void popFrontOfDeque_##type(Deque_##type *deq) {                                \
+  if(deq->empty(deq) == 1) {                                                    \
+    return;                                                                     \
+  } else {                                                                      \
+    deq->front_ptr = mask(deq->front_ptr, deq->capacity, 1);                    \
+    deq->data_size--;                                                           \
+  }                                                                             \
 }                                                                               \
                                                                                 \
 type atOfDeque_##type(Deque_##type *deq, int index) {                           \
@@ -97,4 +117,11 @@ void Deque_##type##_ctor(struct Deque_##type *deq,                              
   deq->at = &atOfDeque_##type;                                                  \
   deq->end = &endOf_##type;                                                     \
   deq->begin = &beginOf_##type;                                                 \
+  deq->pop_back = &popBackOfDeque_##type;                                       \
+  deq->pop_front = &popFrontOfDeque_##type;                                     \
+}                                                                               \
+                                                                                \
+bool Deque_##type##_Iterator_equal(Deque_##type##_Iterator it_current,          \
+                                   Deque_##type##_Iterator it_end) {            \
+  return &it_current.deref(&it_current) == &it_end.deref(&it_end);              \
 }

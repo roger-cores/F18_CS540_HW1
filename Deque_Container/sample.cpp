@@ -37,14 +37,14 @@ int main() {
 	Deque_MyClass deq;
   Deque_MyClass_ctor(&deq, MyClass_less_by_id);
   deq.push_back(&deq, MyClass{1, "Joe"});
-  deq.push_back(&deq, MyClass{2, "Mary"});
+  deq.push_back(&deq, MyClass{2, "Trivedi"});
   deq.push_back(&deq, MyClass{3, "Doe"});
-  Deque_MyClass_Iterator it = deq.begin(&deq);
-  MyClass_print(&it.deref(&it));
-  it.inc(&it);
-  MyClass_print(&it.deref(&it));
-  it.inc(&it);
-  MyClass_print(&it.deref(&it));
+  deq.pop_front(&deq);
+  deq.pop_back(&deq);
+  for (Deque_MyClass_Iterator it = deq.begin(&deq);
+       !Deque_MyClass_Iterator_equal(it, deq.end(&deq)); it.inc(&it)) {
+      MyClass_print(&it.deref(&it));
+  }
 
 	return 0;
 }
