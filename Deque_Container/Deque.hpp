@@ -1,24 +1,27 @@
 /*
  * Implement your functionality here without changing test.cpp
  */
+
+int mask(int value, size_t capacity, int operation) {
+  if(operation == 1) {  // Opearation Increment
+    if(value == capacity-1) return 0;
+    else return ++value;
+  } else {              // Opearation Decrement
+    if(value == 0) return capacity-1;
+    else return --value;
+  }
+}
+
 #define Deque_DEFINE(type)                                                      \
                                                                                 \
 struct Deque_##type;                                                            \
 typedef struct Deque_##type##_Iterator {                                        \
   int index;                                                                    \
   Deque_##type *deq;                                                            \
-  type& (*deref)(Deque_##type##_Iterator *it);                                   \
+  type& (*deref)(Deque_##type##_Iterator *it);                                  \
   void (*inc)(Deque_##type##_Iterator *it);                                     \
   void (*dec)(Deque_##type##_Iterator *it);                                     \
 } Deque_##type##_Iterator;                                                      \
-                                                                                \
-void incOf_##type(Deque_##type##_Iterator *it) {                                \
-  it->index++;                                                                  \
-}                                                                               \
-                                                                                \
-void decOf_##type(Deque_##type##_Iterator *it) {                                \
-  it->index--;                                                                  \
-}                                                                               \
                                                                                 \
 typedef struct Deque_##type {                                                   \
  bool (*comparator)(const type &one, const type &two);                          \
@@ -53,8 +56,16 @@ type atOfDeque_##type(Deque_##type *deq, int index) {                           
   return deq->data[index];                                                      \
 }                                                                               \
                                                                                 \
-type& derefOf_##type(Deque_##type##_Iterator *it) {                              \
+type& derefOf_##type(Deque_##type##_Iterator *it) {                             \
 return it->deq->data[it->index];                                                \
+}                                                                               \
+                                                                                \
+void incOf_##type(Deque_##type##_Iterator *it) {                                \
+it->index = mask(it->index, it->deq->capacity, 1);                              \
+}                                                                               \
+                                                                                \
+void decOf_##type(Deque_##type##_Iterator *it) {                                \
+it->index = mask(it->index, it->deq->capacity, 0);                              \
 }                                                                               \
                                                                                 \
 Deque_##type##_Iterator endOf_##type(Deque_##type *deq) {                       \
