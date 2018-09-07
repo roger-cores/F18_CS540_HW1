@@ -528,4 +528,3 @@ main() {
     int rv = fclose(devnull);
     assert(rv == 0);
 }
-

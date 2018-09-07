@@ -89,8 +89,13 @@ void popFrontOfDeque_##type(Deque_##type *deq) {                                
   }                                                                             \
 }                                                                               \
                                                                                 \
-type& atOfDeque_##type(Deque_##type *deq, int index) {                           \
-  return deq->data[index];                                                      \
+type& atOfDeque_##type(Deque_##type *deq, int index) {                          \
+  int start = deq->front_ptr;                                                   \
+  start += index;                                                               \
+  if(start > deq->capacity-1) {                                                 \
+    start = start - deq->capacity;                                              \
+  }                                                                             \
+  return deq->data[start];                                                      \
 }                                                                               \
                                                                                 \
 type& backOfDeque_##type(Deque_##type *deq) {                                    \
