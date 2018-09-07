@@ -2,7 +2,7 @@ CPPFLAGS= -Wall -Wextra -pedantic
 
 all:
 		# Insert command to compile the code and generate executable
-		g++ sample.cpp -o sample
+		g++ -ldl sample.cpp -o sample
 run:
 	# Insert command to run the executable
 		./sample.exe
