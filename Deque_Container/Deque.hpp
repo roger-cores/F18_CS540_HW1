@@ -153,7 +153,7 @@ void clearFor_##type(Deque_##type *deq) {                                       
 void dtorFor_##type(Deque_##type *deq) {                                        \
   deq->clear(deq);                                                              \
   free(deq->data);                                                              \
-  deq->data = (type*) calloc(deq->capacity, sizeof(type));                      \
+  free(deq->type_name);                                                         \
 }                                                                               \
                                                                                 \
 void swap_##type(type *item1, type *item2) {                                    \
@@ -246,6 +246,7 @@ void Deque_##type##_reallocate(Deque_##type *deq) {                             
                                                                                 \
   free(deq->data);                                                              \
   deq->data = data;                                                             \
+  data = 0;                                                                     \
 }                                                                               \
                                                                                 \
 bool Deque_##type##_equal(Deque_##type deq1, Deque_##type deq2) {               \
