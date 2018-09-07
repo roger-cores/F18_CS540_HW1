@@ -11,7 +11,7 @@ int mask(int value, size_t capacity, int operation) {
     else return --value;
   }
 }
-
+#define DEQ "Deque_"
 #define Deque_DEFINE(type)                                                      \
                                                                                 \
 struct Deque_##type;                                                            \
@@ -47,7 +47,7 @@ typedef struct Deque_##type {                                                   
  type *data;                                                                    \
  int front_ptr = 0;                                                             \
  int rear_ptr = 0;                                                              \
- char *type_name;                                                               \
+ char type_name[sizeof DEQ#type] = DEQ#type;                                    \
 } Deque_##type;                                                                 \
                                                                                 \
 size_t sizeOfDeque_##type(Deque_##type *deq) {                                  \
@@ -153,7 +153,6 @@ void clearFor_##type(Deque_##type *deq) {                                       
 void dtorFor_##type(Deque_##type *deq) {                                        \
   deq->clear(deq);                                                              \
   free(deq->data);                                                              \
-  free(deq->type_name);                                                         \
 }                                                                               \
                                                                                 \
 void swap_##type(type *item1, type *item2) {                                    \
@@ -220,11 +219,6 @@ void Deque_##type##_ctor(struct Deque_##type *deq,                              
   deq->dtor = &dtorFor_##type;                                                  \
   deq->pop_front = &popFrontOfDeque_##type;                                     \
   deq->sort = &sortOf_##type;                                                   \
-  char deque_prefix[7] = "Deque_";                                              \
-  deq->type_name = (char *) malloc(sizeof(#type) + sizeof(deque_prefix) + 1);   \
-  deq->type_name[0] = '\0';                                                     \
-  strcat(deq->type_name, deque_prefix);                                         \
-  strcat(deq->type_name, #type);                                                \
 }                                                                               \
                                                                                 \
 bool Deque_##type##_Iterator_equal(Deque_##type##_Iterator it_current,          \
