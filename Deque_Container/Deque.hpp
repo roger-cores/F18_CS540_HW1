@@ -196,4 +196,21 @@ void Deque_##type##_reallocate(Deque_##type *deq) {                             
                                                                                 \
   free(deq->data);                                                              \
   deq->data = data;                                                             \
+}                                                                               \
+                                                                                \
+bool Deque_##type##_equal(Deque_##type deq1, Deque_##type deq2) {               \
+  bool result = true;                                                           \
+  result = result && (deq1.comparator == deq2.comparator);                      \
+  result = result && (deq1.size(&deq1) == deq2.size(&deq2));                    \
+  Deque_##type##_Iterator it1;                                                  \
+  Deque_##type##_Iterator it2;                                                  \
+  for(it1 = deq1.begin(&deq1), it2 = deq2.begin(&deq2);                         \
+      !Deque_##type##_Iterator_equal(it1, deq1.end(&deq1)) &&                   \
+      !Deque_##type##_Iterator_equal(it2, deq2.end(&deq2));                     \
+      it1.inc(&it1), it2.inc(&it2)) {                                           \
+        result = result &&                                                      \
+        (deq1.comparator(it1.deref(&it1), it2.deref(&it2))                      \
+        == deq2.comparator(it2.deref(&it2), it1.deref(&it1)));                  \
+  }                                                                             \
+  return result;                                                                \
 }

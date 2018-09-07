@@ -27,6 +27,11 @@ MyClass_less_by_id(const MyClass &o1, const MyClass &o2) {
     return o1.id < o2.id;
 }
 
+bool
+int_less(const int &o1, const int &o2) {
+    return o1 < o2;
+}
+
 /**
   A print utility
 **/
@@ -40,6 +45,8 @@ MyClass_print(const MyClass *o) {
   expands code for MyClass type
 **/
 Deque_DEFINE(MyClass)
+
+Deque_DEFINE(int)
 
 int main() {
   Deque_MyClass deq;
@@ -135,6 +142,106 @@ int main() {
   deq.clear(&deq);
   deq.dtor(&deq);
 
-  
+
+  {
+      Deque_MyClass deq1, deq2;
+      Deque_MyClass_ctor(&deq1, MyClass_less_by_id);
+      Deque_MyClass_ctor(&deq2, MyClass_less_by_id);
+
+      deq1.push_back(&deq1, MyClass{1, "Joe"});
+      deq1.push_back(&deq1, MyClass{2, "Jane"});
+      deq1.push_back(&deq1, MyClass{3, "Mary"});
+      deq2.push_back(&deq2, MyClass{1, "Joe"});
+      deq2.push_back(&deq2, MyClass{2, "Jane"});
+      deq2.push_back(&deq2, MyClass{3, "Mary"});
+
+      assert(Deque_MyClass_equal(deq1, deq2));
+
+      deq1.pop_back(&deq1);
+      assert(!Deque_MyClass_equal(deq1, deq2));
+      deq1.push_back(&deq1, MyClass{4, "Mary"});
+      assert(!Deque_MyClass_equal(deq1, deq2));
+
+      deq1.dtor(&deq1);
+      deq2.dtor(&deq2);
+  }
+
+  {
+      Deque_int deq;
+      Deque_int_ctor(&deq, int_less);
+
+      assert(deq.size(&deq) == 0);
+      assert(deq.empty(&deq));
+
+      // Should print "---- Deque_int, 10".
+      printf("---- %s, %d\n", deq.type_name, int(sizeof(deq.type_name)));
+      // std::cout << "---- " << deq.type_name << ", " << sizeof(deq.type_name) << std::endl;
+      // assert(sizeof deq.type_name == 10);
+
+      deq.push_back(&deq, 1);
+      deq.push_back(&deq, 2);
+      deq.push_back(&deq, 3);
+      deq.push_front(&deq, 0);
+      deq.push_front(&deq, -1);
+
+      printf("%d\n", deq.front(&deq));
+      printf("%d\n", deq.back(&deq));
+      assert(deq.front(&deq) == -1);
+      assert(deq.back(&deq) == 3);
+
+      deq.pop_front(&deq);
+      deq.pop_back(&deq);
+      assert(deq.front(&deq) == 0);
+      assert(deq.back(&deq) == 2);
+
+      assert(deq.size(&deq) == 3);
+
+      for (Deque_int_Iterator it = deq.begin(&deq);
+           !Deque_int_Iterator_equal(it, deq.end(&deq)); it.inc(&it)) {
+          printf("%d\n", it.deref(&it));
+      }
+
+      // Test decrement.
+      {
+          auto it = deq.end(&deq);
+          it.dec(&it);
+          assert(it.deref(&it) == 2);
+      }
+
+      // printf("Using at.\n");
+
+      for (size_t i = 0; i < 3; i++) {
+          printf("%d: %d\n", int(i), deq.at(&deq, i));
+      }
+
+      deq.clear(&deq);
+
+      deq.dtor(&deq);
+  }
+
+  {
+      Deque_int deq1, deq2;
+      Deque_int_ctor(&deq1, int_less);
+      Deque_int_ctor(&deq2, int_less);
+
+      deq1.push_back(&deq1, 1);
+      deq1.push_back(&deq1, 2);
+      deq1.push_back(&deq1, 3);
+      deq2.push_back(&deq2, 1);
+      deq2.push_back(&deq2, 2);
+      deq2.push_back(&deq2, 3);
+
+      assert(Deque_int_equal(deq1, deq2));
+
+      deq1.pop_back(&deq1);
+      assert(!Deque_int_equal(deq1, deq2));
+      deq1.push_back(&deq1, 4);
+      assert(!Deque_int_equal(deq1, deq2));
+
+      deq1.dtor(&deq1);
+      deq2.dtor(&deq2);
+  }
+
+
 	return 0;
 }
