@@ -2,13 +2,13 @@ CPPFLAGS= -Wall -Wextra -pedantic
 
 all:
 		# Insert command to compile the code and generate executable
-		g++ -ldl sample.cpp -o sample
+		g++ -ldl test.cpp -o test
 run:
 	# Insert command to run the executable
-		./sample
+		./test
 checkmem:
 	# Insert command to run the executable with valgrind
 
 clean:
 		# Insert command to clean object files, executables
-		rm sample
+		rm test

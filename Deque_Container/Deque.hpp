@@ -187,7 +187,19 @@ void quick_sort_##type(Deque_##type *deq, int low, int high) {                  
 void sortOf_##type(Deque_##type *deq,                                           \
                    Deque_##type##_Iterator begin,                               \
                    Deque_##type##_Iterator end) {                               \
-  quick_sort_##type(deq, 0, deq->size(deq) - 1);                                \
+  int beginIndex = begin.index;                                                 \
+  if(beginIndex >= deq->front_ptr) {                                            \
+    beginIndex = beginIndex - deq->front_ptr;                                   \
+  } else {                                                                      \
+    beginIndex = (beginIndex+deq->capacity) - deq->front_ptr;                   \
+  }                                                                             \
+  int endIndex = mask(end.index, deq->capacity, 0);                             \
+  if(endIndex >= deq->front_ptr) {                                              \
+    endIndex = endIndex - deq->front_ptr;                                       \
+  } else {                                                                      \
+    endIndex = (endIndex+deq->capacity) - deq->front_ptr;                       \
+  }                                                                             \
+  quick_sort_##type(deq, beginIndex, endIndex);                                 \
 }                                                                               \
                                                                                 \
 void Deque_##type##_ctor(struct Deque_##type *deq,                              \
