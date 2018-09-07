@@ -132,6 +132,9 @@ int main() {
       assert(it.deref(&it).id == 2); // Verify with iterator also.
   }
 
+  deq.clear(&deq);
+  deq.dtor(&deq);
+
   
 	return 0;
 }

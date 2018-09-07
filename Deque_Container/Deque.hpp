@@ -32,6 +32,8 @@ typedef struct Deque_##type {                                                   
  void (*push_front)(Deque_##type *deq, type t);                                 \
  void (*pop_front)(Deque_##type *deq);                                          \
  void (*pop_back)(Deque_##type *deq);                                           \
+ void (*clear)(Deque_##type *deq);                                              \
+ void (*dtor)(Deque_##type *deq);                                                \
  type& (*at)(Deque_##type *deq, int index);                                     \
  type& (*front)(Deque_##type *deq);                                             \
  type& (*back)(Deque_##type *deq);                                              \
@@ -138,6 +140,19 @@ Deque_##type##_Iterator beginOf_##type(Deque_##type *deq) {                     
   return it;                                                                    \
 }                                                                               \
                                                                                 \
+void clearFor_##type(Deque_##type *deq) {                                       \
+  deq->capacity = 17;                                                           \
+  deq->data_size = 0;                                                           \
+  deq->front_ptr = 0;                                                           \
+  deq->rear_ptr = 0;                                                            \
+}                                                                               \
+                                                                                \
+void dtorFor_##type(Deque_##type *deq) {                                        \
+  deq->clear(deq);                                                              \
+  free(deq->data);                                                              \
+  deq->data = (type*) calloc(deq->capacity, sizeof(type));                      \
+}                                                                               \
+                                                                                \
 void Deque_##type##_ctor(struct Deque_##type *deq,                              \
                         bool (*comparator)(const type &one, const type &two)) { \
   deq->data = (type*) calloc(deq->capacity, sizeof(type));                      \
@@ -150,8 +165,10 @@ void Deque_##type##_ctor(struct Deque_##type *deq,                              
   deq->end = &endOf_##type;                                                     \
   deq->begin = &beginOf_##type;                                                 \
   deq->front = &frontOfDeque_##type;                                            \
-  deq->back = &backOfDeque_##type;                                               \
+  deq->back = &backOfDeque_##type;                                              \
   deq->pop_back = &popBackOfDeque_##type;                                       \
+  deq->clear = &clearFor_##type;                                                \
+  deq->dtor = &dtorFor_##type;                                                  \
   deq->pop_front = &popFrontOfDeque_##type;                                     \
   char deque_prefix[7] = "Deque_";                                              \
   deq->type_name = (char *) malloc(sizeof(#type) + sizeof(deque_prefix) + 1);   \
