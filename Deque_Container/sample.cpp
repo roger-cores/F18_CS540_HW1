@@ -397,103 +397,103 @@ main() {
         deq.dtor(&deq);
     }
 
-    // // Test sort.
-    // // You must be able to work with the correct less-than function.
-    // {
-    //     Deque_int deq;
-    //     Deque_int_ctor(&deq, int_less);
-    //     std::default_random_engine e;
-    //     using rand = std::uniform_int_distribution<int>;
-    //
-    //     for (int i = 0; i < 10000; i++) {
-    //         deq.push_back(&deq, rand(-1000000, 1000000)(e));
-    //     }
-    //
-    //     deq.sort(&deq, deq.begin(&deq), deq.end(&deq));
-    //
-    //     deq.dtor(&deq);
-    // }
-    //
-    //
-    // // Sorting Test 2
-    // {
-    //     Deque_int deq1;
-    //     Deque_int_ctor(&deq1, int_less);
-    //
-    //     for (int i=0;i<10000;i++) {
-    //         deq1.push_back(&deq1, i);
-    //     }
-    //
-    //     for (int i=20000;i>=10000;i--) {
-    //         deq1.push_back(&deq1,i);
-    //     }
-    //
-    //     deq1.push_back(&deq1,20001);
-    //
-    //     auto iter1 =  deq1.end(&deq1);
-    //     iter1.dec(&iter1);
-    //
-    //     auto iter2 = deq1.begin(&deq1);
-    //
-    //     for (int i=0;i<10000;i++) {
-    //         iter2.inc(&iter2);
-    //     }
-    //
-    //     deq1.sort(&deq1, iter2,iter1);
-    //
-    //     Deque_int deq2;
-    //     Deque_int_ctor(&deq2 , int_less);
-    //
-    //     for(int i=0;i<=20001;i++) {
-    //         deq2.push_back(&deq2,i);
-    //     }
-    //
-    //     assert(Deque_int_equal(deq1, deq2));
-    //
-    //     deq1.dtor(&deq1);
-    //     deq2.dtor(&deq2);
-    // }
-    //
-    // // Test sort with different comparators.
-    // {
-    //     Deque_MyClass sort_by_id, sorted_by_id;
-    //     Deque_MyClass sort_by_name, sorted_by_name;
-    //
-    //     Deque_MyClass_ctor(&sort_by_id, MyClass_less_by_id);
-    //     Deque_MyClass_ctor(&sorted_by_id, MyClass_less_by_id);
-    //     Deque_MyClass_ctor(&sort_by_name, MyClass_less_by_name);
-    //     Deque_MyClass_ctor(&sorted_by_name, MyClass_less_by_name);
-    //
-    //     sort_by_id.push_back(&sort_by_id, MyClass{1, "Bob"});
-    //     sort_by_id.push_back(&sort_by_id, MyClass{3, "Sheldon"});
-    //     sort_by_id.push_back(&sort_by_id, MyClass{2, "Alex"});
-    //
-    //     sorted_by_id.push_back(&sorted_by_id, MyClass{1, "Bob"});
-    //     sorted_by_id.push_back(&sorted_by_id, MyClass{2, "Alex"});
-    //     sorted_by_id.push_back(&sorted_by_id, MyClass{3, "Sheldon"});
-    //
-    //     sort_by_name.push_back(&sort_by_name, MyClass{1, "Bob"});
-    //     sort_by_name.push_back(&sort_by_name, MyClass{3, "Sheldon"});
-    //     sort_by_name.push_back(&sort_by_name, MyClass{2, "Alex"});
-    //
-    //     sorted_by_name.push_back(&sorted_by_name, MyClass{2, "Alex"});
-    //     sorted_by_name.push_back(&sorted_by_name, MyClass{1, "Bob"});
-    //     sorted_by_name.push_back(&sorted_by_name, MyClass{3, "Sheldon"});
-    //
-    //     assert(!Deque_MyClass_equal(sort_by_id, sorted_by_id));
-    //     sort_by_id.sort(&sort_by_id, sort_by_id.begin(&sort_by_id), sort_by_id.end(&sort_by_id));
-    //     assert(Deque_MyClass_equal(sort_by_id, sorted_by_id));
-    //
-    //     assert(!Deque_MyClass_equal(sort_by_name, sorted_by_name));
-    //     sort_by_name.sort(&sort_by_name, sort_by_name.begin(&sort_by_name), sort_by_name.end(&sort_by_name));
-    //     assert(Deque_MyClass_equal(sort_by_name, sorted_by_name));
-    //
-    //     sort_by_id.dtor(&sort_by_id);
-    //     sorted_by_id.dtor(&sorted_by_id);
-    //     sort_by_name.dtor(&sort_by_name);
-    //     sorted_by_name.dtor(&sorted_by_name);
-    // }
-    //
+    // Test sort.
+    // You must be able to work with the correct less-than function.
+    {
+        Deque_int deq;
+        Deque_int_ctor(&deq, int_less);
+        std::default_random_engine e;
+        using rand = std::uniform_int_distribution<int>;
+
+        for (int i = 0; i < 10000; i++) {
+            deq.push_back(&deq, rand(-1000000, 1000000)(e));
+        }
+
+        deq.sort(&deq, deq.begin(&deq), deq.end(&deq));
+
+        deq.dtor(&deq);
+    }
+
+
+    // Sorting Test 2
+    {
+        Deque_int deq1;
+        Deque_int_ctor(&deq1, int_less);
+
+        for (int i=0;i<10000;i++) {
+            deq1.push_back(&deq1, i);
+        }
+
+        for (int i=20000;i>=10000;i--) {
+            deq1.push_back(&deq1,i);
+        }
+
+        deq1.push_back(&deq1,20001);
+
+        auto iter1 =  deq1.end(&deq1);
+        iter1.dec(&iter1);
+
+        auto iter2 = deq1.begin(&deq1);
+
+        for (int i=0;i<10000;i++) {
+            iter2.inc(&iter2);
+        }
+
+        deq1.sort(&deq1, iter2,iter1);
+
+        Deque_int deq2;
+        Deque_int_ctor(&deq2 , int_less);
+
+        for(int i=0;i<=20001;i++) {
+            deq2.push_back(&deq2,i);
+        }
+
+        assert(Deque_int_equal(deq1, deq2));
+
+        deq1.dtor(&deq1);
+        deq2.dtor(&deq2);
+    }
+
+    // Test sort with different comparators.
+    {
+        Deque_MyClass sort_by_id, sorted_by_id;
+        Deque_MyClass sort_by_name, sorted_by_name;
+
+        Deque_MyClass_ctor(&sort_by_id, MyClass_less_by_id);
+        Deque_MyClass_ctor(&sorted_by_id, MyClass_less_by_id);
+        Deque_MyClass_ctor(&sort_by_name, MyClass_less_by_name);
+        Deque_MyClass_ctor(&sorted_by_name, MyClass_less_by_name);
+
+        sort_by_id.push_back(&sort_by_id, MyClass{1, "Bob"});
+        sort_by_id.push_back(&sort_by_id, MyClass{3, "Sheldon"});
+        sort_by_id.push_back(&sort_by_id, MyClass{2, "Alex"});
+
+        sorted_by_id.push_back(&sorted_by_id, MyClass{1, "Bob"});
+        sorted_by_id.push_back(&sorted_by_id, MyClass{2, "Alex"});
+        sorted_by_id.push_back(&sorted_by_id, MyClass{3, "Sheldon"});
+
+        sort_by_name.push_back(&sort_by_name, MyClass{1, "Bob"});
+        sort_by_name.push_back(&sort_by_name, MyClass{3, "Sheldon"});
+        sort_by_name.push_back(&sort_by_name, MyClass{2, "Alex"});
+
+        sorted_by_name.push_back(&sorted_by_name, MyClass{2, "Alex"});
+        sorted_by_name.push_back(&sorted_by_name, MyClass{1, "Bob"});
+        sorted_by_name.push_back(&sorted_by_name, MyClass{3, "Sheldon"});
+
+        assert(!Deque_MyClass_equal(sort_by_id, sorted_by_id));
+        sort_by_id.sort(&sort_by_id, sort_by_id.begin(&sort_by_id), sort_by_id.end(&sort_by_id));
+        assert(Deque_MyClass_equal(sort_by_id, sorted_by_id));
+
+        assert(!Deque_MyClass_equal(sort_by_name, sorted_by_name));
+        sort_by_name.sort(&sort_by_name, sort_by_name.begin(&sort_by_name), sort_by_name.end(&sort_by_name));
+        assert(Deque_MyClass_equal(sort_by_name, sorted_by_name));
+
+        sort_by_id.dtor(&sort_by_id);
+        sorted_by_id.dtor(&sorted_by_id);
+        sort_by_name.dtor(&sort_by_name);
+        sorted_by_name.dtor(&sorted_by_name);
+    }
+
     // // Performance testing for sorting
     // {
     //
@@ -522,9 +522,9 @@ main() {
     //     deq1.dtor(&deq1);
     //
     // }
-    //
-    // // Print allocation info
-    // printf("%ld allocations totalling %ld bytes\n", alloc_call_count, total_bytes_allocated);
-    // int rv = fclose(devnull);
-    // assert(rv == 0);
+
+    // Print allocation info
+    printf("%ld allocations totalling %ld bytes\n", alloc_call_count, total_bytes_allocated);
+    int rv = fclose(devnull);
+    assert(rv == 0);
 }

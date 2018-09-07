@@ -33,12 +33,15 @@ typedef struct Deque_##type {                                                   
  void (*pop_front)(Deque_##type *deq);                                          \
  void (*pop_back)(Deque_##type *deq);                                           \
  void (*clear)(Deque_##type *deq);                                              \
- void (*dtor)(Deque_##type *deq);                                                \
+ void (*dtor)(Deque_##type *deq);                                               \
  type& (*at)(Deque_##type *deq, int index);                                     \
  type& (*front)(Deque_##type *deq);                                             \
  type& (*back)(Deque_##type *deq);                                              \
  Deque_##type##_Iterator (*begin)(Deque_##type *deq);                           \
  Deque_##type##_Iterator (*end)(Deque_##type *deq);                             \
+ void (*sort)(Deque_##type *deq,                                                \
+              Deque_##type##_Iterator begin,                                    \
+              Deque_##type##_Iterator end);                                     \
  size_t data_size = 0;                                                          \
  size_t capacity = 17;                                                          \
  type *data;                                                                    \
@@ -100,11 +103,11 @@ type& atOfDeque_##type(Deque_##type *deq, int index) {                          
   return deq->data[start];                                                      \
 }                                                                               \
                                                                                 \
-type& backOfDeque_##type(Deque_##type *deq) {                                    \
+type& backOfDeque_##type(Deque_##type *deq) {                                   \
   return deq->data[mask(deq->rear_ptr, deq->capacity, 0)];                      \
 }                                                                               \
                                                                                 \
-type& frontOfDeque_##type(Deque_##type *deq) {                                   \
+type& frontOfDeque_##type(Deque_##type *deq) {                                  \
   return deq->data[deq->front_ptr];                                             \
 }                                                                               \
                                                                                 \
@@ -153,6 +156,40 @@ void dtorFor_##type(Deque_##type *deq) {                                        
   deq->data = (type*) calloc(deq->capacity, sizeof(type));                      \
 }                                                                               \
                                                                                 \
+void swap_##type(type *item1, type *item2) {                                    \
+  type temp = *item1;                                                           \
+  *item1 = *item2;                                                              \
+  *item2 = temp;                                                                \
+}                                                                               \
+                                                                                \
+int partition_##type(Deque_##type *deq, int low, int high) {                    \
+  type pivot = deq->at(deq, high);                                              \
+  int i = (low - 1);                                                            \
+  int j;                                                                        \
+  for(j=low; j<=high-1; j++) {                                                  \
+    if(deq->comparator(deq->at(deq, j), pivot)) {                               \
+      i++;                                                                      \
+      swap_##type(&deq->at(deq, i), &deq->at(deq, j));                          \
+    }                                                                           \
+  }                                                                             \
+  swap_##type(&deq->at(deq, i+1), &deq->at(deq, high));                         \
+  return (i+1);                                                                 \
+}                                                                               \
+                                                                                \
+void quick_sort_##type(Deque_##type *deq, int low, int high) {                  \
+  if(low < high) {                                                              \
+    int part_index = partition_##type(deq, low, high);                          \
+    quick_sort_##type(deq, low, part_index - 1);                                \
+    quick_sort_##type(deq, part_index + 1, high);                               \
+  }                                                                             \
+}                                                                               \
+                                                                                \
+void sortOf_##type(Deque_##type *deq,                                           \
+                   Deque_##type##_Iterator begin,                               \
+                   Deque_##type##_Iterator end) {                               \
+  quick_sort_##type(deq, 0, deq->size(deq) - 1);                                \
+}                                                                               \
+                                                                                \
 void Deque_##type##_ctor(struct Deque_##type *deq,                              \
                         bool (*comparator)(const type &one, const type &two)) { \
   deq->data = (type*) calloc(deq->capacity, sizeof(type));                      \
@@ -170,6 +207,7 @@ void Deque_##type##_ctor(struct Deque_##type *deq,                              
   deq->clear = &clearFor_##type;                                                \
   deq->dtor = &dtorFor_##type;                                                  \
   deq->pop_front = &popFrontOfDeque_##type;                                     \
+  deq->sort = &sortOf_##type;                                                   \
   char deque_prefix[7] = "Deque_";                                              \
   deq->type_name = (char *) malloc(sizeof(#type) + sizeof(deque_prefix) + 1);   \
   deq->type_name[0] = '\0';                                                     \

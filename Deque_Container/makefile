@@ -5,10 +5,10 @@ all:
 		g++ -ldl sample.cpp -o sample
 run:
 	# Insert command to run the executable
-		./sample.exe
+		./sample
 checkmem:
 	# Insert command to run the executable with valgrind
 
 clean:
 		# Insert command to clean object files, executables
-		rm sample.exe
+		rm sample
