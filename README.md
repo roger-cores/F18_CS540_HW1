@@ -1,5 +1,5 @@
 ## CS440/540 - Programming Assignment 1 - Container in C
 
-#### Please find detailed description about assignment at below link:
+#### All functionlaities are working. Althogh I doubt that my Deq equals works. I couldn't use memcmp on structs because of padding so I used the comparator in a tricky way. Please let me know where I went wrong on that.
 
-* http://www.cs.binghamton.edu/~kchiu/cs540/prog/1/
+Thank you!
